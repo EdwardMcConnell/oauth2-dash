@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>Interaction Dashboard</title>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+		<style>
+			body {
+				margin-top:55px;
+			}
+			.btn:active,
+			.btn:focus,
+			.btn.active,
+			.btn {
+			  outline: 0;
+			}
+		</style>
+	</head>
+	<body>
+
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">APInteract</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <form id="frm-interact" class="navbar-form navbar-left" onsubmit="return false;">
+          	<div class="btn-group" data-toggle="buttons">
+			  <label class="btn btn-primary">
+			    <input type="radio" name="options" id="method-post" value="POST"> POST
+			  </label>
+			  <label class="btn btn-primary active">
+			    <input type="radio" name="options" id="method-get" value="GET" checked> GET
+			  </label>
+			  <label class="btn btn-primary">
+			    <input type="radio" name="options" id="method-put" value="PUT"> PUT
+			  </label>
+			  <label class="btn btn-primary">
+			    <input type="radio" name="options" id="method-delete" value="DELETE"> DELETE
+			  </label>
+			</div>
+			
+			<input type="text" class="form-control" id="uri" placeholder="Request URI" style="width:375px" />
+			
+			<button class="btn" type="button" id="params" aria-hidden="true">Add Params</button>
+			<button class="btn" type="button" id="static-params" aria-hidden="true">Show Static Params</button>
+
+			<input type="submit" class="btn btn-primary" value="Do-it to-it" />
+		  
+        </div><!--/.nav-collapse -->
+        </div>
+  		
+    </div>
+
+    <div class="container" id="param-container">
+    	
+		<div class="form-group">
+			<textarea class="form-control" id="send-data" placeholder="JSON Data" rows="6"></textarea>
+		</div>
+
+    	
+    </div>
+    <div class="container" id="static-param-container">
+    	
+		<div class="form-group">
+			<textarea class="form-control" id="static-data" placeholder="Persist JSON Data Across Requests" rows="6"></textarea>
+		</div>
+
+    	
+    </div>
+    <hr />
+    <div class="container">
+    	<strong>Results:</strong> <span class="pull-right"><button class="btn btn-sm btn-link" id="clear-log">Clear log</button> <button class="btn btn-sm btn-link" id="clear-log-1">Clear log -1</button></span>
+    	<div id="result-log" style="clear:both"></div>
+    </div>
+
+
+
+    <script type="text/javascript">
+    	function getMethod() {
+    		if($('#method-post').is(":checked")) return $('#method-post');
+    		if($('#method-get').is(":checked")) return $('#method-get');
+    		if($('#method-put').is(":checked")) return $('#method-put');
+    		if($('#method-delete').is(":checked")) return $('#method-delete');
+    	}
+
+    	$('#frm-interact').submit( function(e){
+
+    		e.preventDefault();
+
+    		var val = $('#send-data');
+    		var sval = $('#static-data');
+    		var method = getMethod();
+    		var uri = $('#uri');
+
+    		var log = $('#result-log');
+    		var el = $('<div class="alert alert-warning alert-dismissible"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>');
+
+    		el.append('<input type="hidden" class="request-detail" data-params=\'' + val.val() +'\'/>');
+    		el.append('<input type="hidden" class="request-method" value="' + method.val() +'"/>');
+    		el.append('<input type="hidden" class="request-uri" value="'+ uri.val() +'"/>');
+
+    		el.append('<img src="/img/loading.gif" class="ajax-loading" />');
+
+    		log.prepend(el);
+
+    		try {
+	    		var params = $.trim(val.val()) == '' ? {} : $.parseJSON(val.val());
+	    		var sparams = $.trim(sval.val()) == '' ? {} : $.parseJSON(sval.val());
+
+	    		for (var attrname in sparams) { if(sparams.hasOwnProperty(attrname)) { params[attrname] = sparams[attrname]; } }
+
+	    		$.ajax({
+	    			url: uri.val(),
+	    			type: method.val(),
+	    			data: params
+	    		}).error(function(xhr,status, err){
+
+	    			el.find('img').remove();
+	    			el.removeClass('alert-warning').addClass('alert-danger').append('<button class="btn btn-link replay"><strong>'+ method.val() +'</strong> '+ uri.val() +'</button><br/><pre>'+xhr.responseText+'</pre>');
+
+	    		}).success(function(data, status, xhr){
+	    			el.find('img').remove();
+
+					if(data.error) {
+						el.removeClass('alert-warning').addClass('alert-error').append('<button class="btn btn-link replay"><strong>'+ method.val() +'</strong> '+ uri.val() +'</button><br/><pre>'+xhr.responseText+'</pre>');
+					} else {
+	    				el.removeClass('alert-warning').addClass('alert-success').append('<button class="btn btn-link replay"><strong>'+ method.val() +'</strong> '+ uri.val() +'</button><br/><pre>'+xhr.responseText+'</pre>');
+	    				
+	    			}
+
+	    		});
+	    	}
+	    	catch (e)
+	    	{
+	    		el.find('img').remove();
+	    		el.removeClass('alert-warning').addClass('alert-danger').append('<pre>'+e.message+'</pre>');
+	    	}
+
+    	});
+
+		$('#params').click(function(e){
+			e.preventDefault();
+
+			if($('#param-container').is(':hidden'))
+			{
+				$('#param-container').slideDown('fast');
+				$(this).html('Remove Params');
+				$('#static-data').focus();
+			}
+			else
+			{
+				$('#param-container').slideUp('fast');
+				$('#send-data').val('');
+				$(this).html('Add Params');
+				$('#uri').focus();
+			}
+		});
+
+		$('#static-params').click(function(e){
+			e.preventDefault();
+
+			if($('#static-param-container').is(':hidden'))
+			{
+				$('#static-param-container').slideDown('fast');
+				$(this).html('Hide Static Params');
+				$('#static-data').focus();
+			}
+			else
+			{
+				$('#static-param-container').slideUp('fast');
+				$(this).html('Show Static Params');
+				$('#uri').focus();
+			}
+		});
+
+		$('#static-data').on('change',function(){
+			if($(this).val() != '') {
+				$('#static-params').addClass('btn-info');
+			}
+			else $('#static-params').removeClass('btn-info');
+		});
+
+		$('#uri').focus();
+		$('#param-container').hide();
+		$('#static-param-container').hide();
+
+		$(document).on('click', '.replay', function(e){
+			e.preventDefault();
+
+			var p = $(this).closest('div.alert');
+
+			$('#send-data').val(p.find('.request-detail').attr('data-params'));
+    		$('#method-'+ p.find('.request-method').val().toLowerCase()).prop('checked',true);
+    		$('#uri').val(p.find('.request-uri').val());
+
+    		if($('#send-data').val() != '' && $('#param-container').is(":hidden")) {
+    			$('#params').click();
+    		}
+    		else if($('#send-data').val() == '' && $('#param-container').is(":visible")) {
+				$('#params').click();
+			}
+		
+		});
+
+		$('#send-data').on('keydown',function(e){
+			if(e.which == 13) {
+				$('#frm-interact').submit();
+				return false;
+			}
+		});
+
+		$('#clear-log').click(function(e){
+			e.preventDefault();
+			$('#result-log div.alert').remove();
+		});
+
+		$('#clear-log-1').click(function(e){
+			e.preventDefault();
+			var ct = 0;
+			$('#result-log div.alert').each(function(el){
+				if(ct > 0) $(this).remove();
+				ct++;
+			});
+		});
+
+    </script>
+</body>
+</html>
