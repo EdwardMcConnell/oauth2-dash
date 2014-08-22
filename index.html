@@ -2,9 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	    <meta name="viewport" content="width=device-width, initial-scale=1">
-	    <title>Interaction Dashboard</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Interaction Dashboard</title>
 
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -12,15 +12,11 @@
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
 		<style>
 			body {
 				margin-top:55px;
 			}
+			
 			.btn:active,
 			.btn:focus,
 			.btn.active,
@@ -35,38 +31,38 @@
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">APInteract</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <form id="frm-interact" class="navbar-form navbar-left" onsubmit="return false;">
-          	<div class="btn-group" data-toggle="buttons">
-			  <label class="btn btn-primary">
-			    <input type="radio" name="options" id="method-post" value="POST"> POST
-			  </label>
-			  <label class="btn btn-primary active">
-			    <input type="radio" name="options" id="method-get" value="GET" checked> GET
-			  </label>
-			  <label class="btn btn-primary">
-			    <input type="radio" name="options" id="method-put" value="PUT"> PUT
-			  </label>
-			  <label class="btn btn-primary">
-			    <input type="radio" name="options" id="method-delete" value="DELETE"> DELETE
-			  </label>
-			</div>
-			
-			<input type="text" class="form-control" id="uri" placeholder="Request URI" style="width:375px" />
-			
-			<button class="btn" type="button" id="params" aria-hidden="true">Add Params</button>
-			<button class="btn" type="button" id="static-params" aria-hidden="true">Show Static Params</button>
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">APInteract</a>
+        	</div>
+	        <div class="navbar-collapse collapse">
+				<form id="frm-interact" class="navbar-form navbar-left" onsubmit="return false;">
+					<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-primary">
+							<input type="radio" name="options" id="method-post" value="POST"> POST
+				  		</label>
+						<label class="btn btn-primary active">
+							<input type="radio" name="options" id="method-get" value="GET" checked> GET
+						</label>
+						<label class="btn btn-primary">
+							<input type="radio" name="options" id="method-put" value="PUT"> PUT
+						</label>
+						<label class="btn btn-primary">
+							<input type="radio" name="options" id="method-delete" value="DELETE"> DELETE
+						</label>
+					</div>
+				
+					<input type="text" class="form-control" id="uri" placeholder="Request URI" style="width:375px" />
+				
+					<button class="btn" type="button" id="params" aria-hidden="true">Add Params</button>
+					<button class="btn" type="button" id="static-params" aria-hidden="true">Show Static Params</button>
 
-			<input type="submit" class="btn btn-primary" value="Do-it to-it" />
-		  
-        </div><!--/.nav-collapse -->
+					<input type="submit" class="btn btn-primary" value="Do-it to-it" />
+			  
+	        </div><!--/.nav-collapse -->
         </div>
   		
     </div>
@@ -94,6 +90,11 @@
     </div>
 
 
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
     <script type="text/javascript">
     	function getMethod() {
